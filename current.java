@@ -5,14 +5,14 @@ import java.io.*;
 import java.lang.*;
 
 ///Users/kushalthakar/Desktop/JAVA/demo.txt
-interface SavingsAccount
+interface CurrentAccount
 {
-	final double rate = 0.004,limit = 10000,limit1 = 200;
+	final double rate = 0.04,limit = 10000,limit1 = 200;
 	void deposit(double n,Date d);
 	void withdraw(double n,Date d);
 }
 
-class Customer implements SavingsAccount
+class Customer implements CurrentAccount
 {
 	String username,password,name,address,phone;
 	double balance;
@@ -46,7 +46,7 @@ class Customer implements SavingsAccount
 		balance += amount;
 		addTransaction(String.format(NumberFormat.getCurrencyInstance().format(amount)+" credited to your account. Balance - " +NumberFormat.getCurrencyInstance().format(balance)+" as on " + "%1$tD"+" at "+"%1$tT.",date));
 	}
-	@Override
+    @Override
 	public void withdraw(double amount,Date date)
 	{
 		if(amount>(balance-200))
@@ -72,7 +72,7 @@ class current
     public static void democurrent() throws IOException
     {
         Scanner sc  =  new Scanner(System.in);
-		FileWriter writer = new FileWriter("/Users/kushalthakar/Desktop/JAVA/current.txt", true);    
+		FileWriter writer = new FileWriter("/Users/kushalthakar/Desktop/JAVA/FinalProject/current.txt", true);    
     	BufferedWriter br = new BufferedWriter(writer);
 		
 		Customer customer;
@@ -164,10 +164,11 @@ class current
 									System.out.println("W  E  L  C  O  M  E");
 									System.out.println("-------------------\n");
 									System.out.println("1. Deposit.");
-									System.out.println("2. Transfer.");
-									System.out.println("3. Last 5 transactions.");
-									System.out.println("4. User information.");
-									System.out.println("5. Log out.");
+                                    System.out.println("2. Withdraw.");
+									System.out.println("3. Transfer.");
+									System.out.println("4. Last 5 transactions.");
+									System.out.println("5. User information.");
+									System.out.println("6. Log out.");
 									System.out.print("\nEnter your choice : ");
 									choice = sc.nextInt();
 									sc.nextLine();
@@ -182,9 +183,21 @@ class current
 											}
 											amount = sc.nextDouble();
 											sc.nextLine();
-																			customer.deposit(amount,new Date());
+											customer.deposit(amount,new Date());
 											break;
-										case 2:
+                                        case 2:
+                                            System.out.print("Enter amount : ");
+                                            while(!sc.hasNextDouble())
+                                            {
+                                                System.out.println("Invalid amount. Enter again :");
+                                                sc.nextLine();
+                                            }
+                                            amount = sc.nextDouble();
+                                            sc.nextLine();
+                                            customer.withdraw(amount,new Date());
+                                            break;
+                                            
+										case 3:
 											System.out.print("Enter payee username : ");
 											username = sc.next();
 											sc.nextLine();
@@ -212,19 +225,19 @@ class current
 												System.out.println("Username doesn't exist.");
 											}
 											break;
-										case 3:
+										case 4:
 											for(String transactions : customer.transactions)
 											{
 												System.out.println(transactions);
 											}
 											break;
-										case 4:
+										case 5:
 											System.out.println("Accountholder name : "+customer.name);
 											System.out.println("Accountholder address : "+customer.address);
 											System.out.println("Accountholder contact : "+customer.phone);
 											System.out.println("Accountholder Balance : "+customer.balance);
 											break;
-										case 5:
+										case 6:
 											continue outer;
 											default:
 												System.out.println("Wrong choice !");
@@ -255,18 +268,45 @@ class current
                         }*/
 						if(bank.customerMap.containsKey(username))
 						{
-							customer = bank.customerMap.get(username);
-                            br.write("--------------Updated Username:" + username + "-------------\n");
-                            System.out.print("Update Name : ");
-						    customer.name = sc.next();
-                            br.write("Name: " + customer.name + "\n");
-                            System.out.print("Update address : ");
-                            customer.address = sc.next();
-                            br.write("Address: " + customer.address + "\n");
-                            System.out.print("Update Contact Number : ");
-						    customer.phone = sc.next();
-                            br.write("Contact: " + customer.phone + "\n");
                             
+							customer = bank.customerMap.get(username);
+                            br.write("------- Updated Username:" + username + " -------\n");
+                            while(true)
+                            {
+                                
+                                System.out.println("Press 1 to update Name: ");
+                                System.out.println("Press 2 to update Address: ");
+                                System.out.println("Press 3 to update Contact Number: ");
+                                System.out.println("Press 4 to exit: ");
+                                System.out.println("Enter Choice");
+                                int ch = sc.nextInt();
+                                switch (ch) 
+                                {
+                                    case 1:
+                                        System.out.print("Update Name : ");
+                                        customer.name = sc.next();
+                                        br.write("Name: " + customer.name + "\n");
+                                        break;
+                                    case 2: 
+                                        System.out.print("Update address : ");
+                                        customer.address = sc.next();
+                                        br.write("Address: " + customer.address + "\n");
+                                        break;
+                                    case 3:
+                                        System.out.print("Update Contact Number : ");
+                                        customer.phone = sc.next();
+                                        br.write("Contact: " + customer.phone + "\n");
+                                        break;
+                                    case 4: 
+                                        br.write("-----------------------------------------\n");
+                                        br.close();
+                                        democurrent();
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                
+                            }
                             
 						}
 						else
