@@ -3,7 +3,7 @@ import java.util.*;
 import java.text.*;
 import java.io.*;
 import java.lang.*;
-
+//savings
 ///Users/kushalthakar/Desktop/JAVA/demo.txt
 interface SavingsAccount
 {
@@ -72,7 +72,7 @@ class savings
     public static void demosavings() throws IOException
     {
         Scanner sc  =  new Scanner(System.in);
-		FileWriter writer = new FileWriter("/Users/kushalthakar/Desktop/JAVA/savings.txt", true);    
+		FileWriter writer = new FileWriter("/Users/kushalthakar/Desktop/JAVA/FinalProject/savings.txt", true);    
     	BufferedWriter br = new BufferedWriter(writer);
 		
 		Customer customer;
@@ -268,18 +268,44 @@ class savings
                         }*/
 						if(bank.customerMap.containsKey(username))
 						{
-							customer = bank.customerMap.get(username);
-                            br.write("--------------Updated Username:" + username + "-------------\n");
-                            System.out.print("Update Name : ");
-						    customer.name = sc.next();
-                            br.write("Name: " + customer.name + "\n");
-                            System.out.print("Update address : ");
-                            customer.address = sc.next();
-                            br.write("Address: " + customer.address + "\n");
-                            System.out.print("Update Contact Number : ");
-						    customer.phone = sc.next();
-                            br.write("Contact: " + customer.phone + "\n");
                             
+							customer = bank.customerMap.get(username);
+                            br.write("------- Updated Username:" + username + " -------\n");
+                            while(true)
+                            {
+                                System.out.println("Press 1 to update Name: ");
+                                System.out.println("Press 2 to update Address: ");
+                                System.out.println("Press 3 to update Contact Number: ");
+                                System.out.println("Press 4 to exit: ");
+                                System.out.println("Enter Choice");
+                                int ch = sc.nextInt();
+                                switch (ch) 
+                                {
+                                    case 1:
+                                        System.out.print("Update Name : ");
+                                        customer.name = sc.next();
+                                        br.write("Name: " + customer.name + "\n");
+                                        break;
+                                    case 2: 
+                                        System.out.print("Update address : ");
+                                        customer.address = sc.next();
+                                        br.write("Address: " + customer.address + "\n");
+                                        break;
+                                    case 3:
+                                        System.out.print("Update Contact Number : ");
+                                        customer.phone = sc.next();
+                                        br.write("Contact: " + customer.phone + "\n");
+                                        break;
+                                    case 4: 
+                                        br.write("-----------------------------------------\n");
+                                        br.close();
+                                        demosavings();
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                
+                            }
                             
 						}
 						else
