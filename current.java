@@ -1,5 +1,4 @@
 //package CurrentPackage;
-//import com.sun.source.tree.ContinueTree;
 
 import java.util.*;
 import java.text.*;
@@ -22,6 +21,7 @@ class Customer implements CurrentAccount
     double balance;
     double credit_balance = 50000;
     ArrayList<String> transactions;
+    ArrayList<String> clients;
     Customer(String username, String acc_number, String password,String name,String address,String phone,double balance,Date date)
     {
         this.username = username;
@@ -31,11 +31,26 @@ class Customer implements CurrentAccount
         this.address = address;
         this.phone = phone;
         this.balance = balance;
+        clients = new ArrayList<String>(5);
         transactions  =  new ArrayList<String>(5);
+        //addClients(String.format("Username: " + username + "\n" + "Account Number: " + acc_number + "\n" + "Name: " + name + "\n" + "Address: " + address + "\n" + "Phone: " + phone + "\n" + " as on " + "%1$tD"+" at "+"%1$tT.",date));
         addTransaction(String.format("Initial deposit - " +NumberFormat.getCurrencyInstance().format(balance)+" as on " + "%1$tD"+" at "+"%1$tT.",date));
     }
 
+    public void add(Date date)
+    {
+        addClients(String.format("Username: " + username + "\n" + "Account Number: " + acc_number + "\n" + "Name: " + name + "\n" + "Address: " + address + "\n" + "Phone: " + phone + "\n" + "as on " + "%1$tD"+" at "+"%1$tT." + "\n-----------------",date));
+    }
+    public void addClients(String message)
+    {
+        clients.add(0,message);
+        if(clients.size()>5)
+        {
+            clients.remove(5);
+            clients.trimToSize();
+        }
 
+    }
 
 
     public void update(Date date)
@@ -163,7 +178,7 @@ public class current
 
                         }*/
                 switch (choice) {
-                    case 1 -> {
+                    case 1: {
                         System.out.print("Enter name : ");
                         String name = sc.nextLine();
                         br.write("Name: " + name + "\n");
@@ -206,8 +221,10 @@ public class current
                         sc.nextLine();
                         customer = new Customer(username, acc_number, password, name, address, phone, amount, new Date());
                         bank.customerMap.put(username, customer);
+                        customer.add(new Date());
+                        continue outer;
                     }
-                    case 2 -> {
+                    case 2: {
                         System.out.println("Enter username : ");
                         username = sc.next();
                         sc.nextLine();
@@ -314,11 +331,17 @@ public class current
                                             }
                                             break;
                                         case 6:
+
+                                            for (String clients : customer.clients) {
+                                                System.out.println(clients);
+                                            }
+                                        /*
                                             System.out.println("Accountholder Name : " + customer.name);
                                             System.out.println("Accountholder Account Number : " + customer.acc_number);
                                             System.out.println("Accountholder Address : " + customer.address);
                                             System.out.println("Accountholder Contact : " + customer.phone);
                                             System.out.println("Accountholder Balance : " + customer.balance);
+                                        */
                                             break;
                                         case 7:
                                             continue outer;
@@ -328,13 +351,15 @@ public class current
                                 }
                             } else {
                                 System.out.println("Wrong username/password.");
+                                continue outer;
                             }
                         } else {
                             System.out.println("Wrong username/password.");
+                            continue outer;
                         }
                     }
 
-                    case 3 -> {
+                    case 3: {
                         System.out.println("Enter username : ");
                         username = sc.next();
                         if (bank.customerMap.containsKey(username)) {
@@ -345,72 +370,73 @@ public class current
                         break;
                     }
 
-                        case 4 -> {
+                    case 4 : {
 
-                            System.out.println("Enter username : ");
-                            username = sc.next();
-                            sc.nextLine();
-                            System.out.println("Enter password : ");
-                            password = sc.next();
-                            sc.nextLine();
-                            if (bank.customerMap.containsKey(username)) {
-                                customer = bank.customerMap.get(username);
-                                if (customer.password.equals(password)) {
+                        System.out.println("Enter username : ");
+                        username = sc.next();
+                        sc.nextLine();
+                        System.out.println("Enter password : ");
+                        password = sc.next();
+                        sc.nextLine();
+                        if (bank.customerMap.containsKey(username)) {
+                            customer = bank.customerMap.get(username);
+                            if (customer.password.equals(password)) {
 
-                                    br.write("----- Updated " + customer.username + "------");
+                                br.write("----- Updated " + customer.username + "------");
 
-                                    Scanner in = new Scanner(System.in);
-                                    while (true) {
-                                        System.out.println("Press 1 to update Name: ");
-                                        System.out.println("Press 2 to update Address: ");
-                                        System.out.println("Press 3 to update Contact Number: ");
-                                        System.out.println("Press 4 to exit: ");
-                                        System.out.println("Enter Choice");
-                                        int ch = sc.nextInt();
-                                        switch (ch) {
-                                            case 1:
-                                                System.out.print("Update Name : ");
-                                                customer.name = in.nextLine();
-                                                br.write("\nName: " + customer.name + "\n");
-                                                break;
-                                            case 2:
-                                                System.out.print("Update address : ");
-                                                customer.address = in.nextLine();
-                                                br.write("Address: " + customer.address + "\n");
-                                                break;
-                                            case 3:
-                                                System.out.print("Update Contact Number : ");
-                                                customer.phone = in.nextLine();
-                                                br.write("Contact: " + customer.phone + "\n");
-                                                break;
-                                            case 4:
-                                                br.write("-----------------------------------------\n");
-                                                br.close();
-                                                continue  outer;
-                                            default:
-                                                break ;
-                                        }
-
-
+                                Scanner in = new Scanner(System.in);
+                                while (true) {
+                                    System.out.println("Press 1 to update Name: ");
+                                    System.out.println("Press 2 to update Address: ");
+                                    System.out.println("Press 3 to update Contact Number: ");
+                                    System.out.println("Press 4 to exit: ");
+                                    System.out.println("Enter Choice");
+                                    int ch = sc.nextInt();
+                                    switch (ch) {
+                                        case 1:
+                                            System.out.print("Update Name : ");
+                                            customer.name = in.nextLine();
+                                            br.write("\nName: " + customer.name + "\n");
+                                            break;
+                                        case 2:
+                                            System.out.print("Update address : ");
+                                            customer.address = in.nextLine();
+                                            br.write("Address: " + customer.address + "\n");
+                                            break;
+                                        case 3:
+                                            System.out.print("Update Contact Number : ");
+                                            customer.phone = in.nextLine();
+                                            br.write("Contact: " + customer.phone + "\n");
+                                            break;
+                                        case 4:
+                                            br.write("-----------------------------------------\n");
+                                            br.close();
+                                            continue  outer;
+                                        default:
+                                            break ;
                                     }
+                                    customer.add(new Date());
 
                                 }
-                            }
-                            else
-                                {
-                                System.out.println("Username doesn't exist.");
-                            }
 
+
+                            }
+                        }
+                        else
+                        {
+                            System.out.println("Username doesn't exist.");
                         }
 
+                    }
 
 
 
-                        case 5 -> {
-                            br.close();
-                            System.exit(1);
-                        }
-                    default -> System.out.println("Wrong choice !");
+
+                    case 5: {
+                        br.close();
+                        System.exit(1);
+                    }
+                    default: System.out.println("Wrong choice !");
                 }
 
             }
@@ -426,11 +452,11 @@ public class current
     {
         customerMap = new HashMap <String,Customer>();
     }
-	/*public static void main(String []args) throws IOException
-	{
+    public static void main(String []args) throws IOException
+    {
 
-       democurrent();
+        democurrent();
 
-    }*/
+    }
 
 }
