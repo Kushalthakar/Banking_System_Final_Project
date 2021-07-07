@@ -1,6 +1,6 @@
 //package SavingsPackage;
-//import com.sun.source.tree.ContinueTree;
 //import CurrentPackage.*;
+
 import java.util.*;
 import java.text.*;
 import java.io.*;
@@ -22,6 +22,7 @@ class Customer implements SavingsAccount
     double balance;
     double credit_balance = 50000;
     ArrayList<String> transactions;
+    ArrayList<String> clients;
     Customer(String username, String acc_number, String password,String name,String address,String phone,double balance,Date date)
     {
         this.username = username;
@@ -31,11 +32,26 @@ class Customer implements SavingsAccount
         this.address = address;
         this.phone = phone;
         this.balance = balance;
+        clients = new ArrayList<String>(5);
         transactions  =  new ArrayList<String>(5);
+        //addClients(String.format("Username: " + username + "\n" + "Account Number: " + acc_number + "\n" + "Name: " + name + "\n" + "Address: " + address + "\n" + "Phone: " + phone + "\n" + " as on " + "%1$tD"+" at "+"%1$tT.",date));
         addTransaction(String.format("Initial deposit - " +NumberFormat.getCurrencyInstance().format(balance)+" as on " + "%1$tD"+" at "+"%1$tT.",date));
     }
 
+    public void add(Date date)
+    {
+        addClients(String.format("Username: " + username + "\n" + "Account Number: " + acc_number + "\n" + "Name: " + name + "\n" + "Address: " + address + "\n" + "Phone: " + phone + "\n" + "as on " + "%1$tD"+" at "+"%1$tT." + "\n-----------------",date));
+    }
+    public void addClients(String message)
+    {
+        clients.add(0,message);
+        if(clients.size()>5)
+        {
+            clients.remove(5);
+            clients.trimToSize();
+        }
 
+    }
 
 
     public void update(Date date)
@@ -163,7 +179,7 @@ public class savings
 
                         }*/
                 switch (choice) {
-                    case 1 -> {
+                    case 1: {
                         System.out.print("Enter name : ");
                         String name = sc.nextLine();
                         br.write("Name: " + name + "\n");
@@ -206,8 +222,10 @@ public class savings
                         sc.nextLine();
                         customer = new Customer(username, acc_number, password, name, address, phone, amount, new Date());
                         bank.customerMap.put(username, customer);
+                        customer.add(new Date());
+                        continue outer;
                     }
-                    case 2 -> {
+                    case 2: {
                         System.out.println("Enter username : ");
                         username = sc.next();
                         sc.nextLine();
@@ -276,8 +294,7 @@ public class savings
                                                 System.out.println("Username doesn't exist.");
                                             }
                                             break;
-                                        case 4:
-                                        {
+                                        case 4: {
                                             System.out.println("1.Debit card");
                                             System.out.println("2.Credit card");
                                             int c = sc.nextInt();
@@ -309,18 +326,23 @@ public class savings
                                             }
                                         }
 
-
                                         case 5:
                                             for (String transactions : customer.transactions) {
                                                 System.out.println(transactions);
                                             }
                                             break;
                                         case 6:
+
+                                            for (String clients : customer.clients) {
+                                                System.out.println(clients);
+                                            }
+                                        /*
                                             System.out.println("Accountholder Name : " + customer.name);
                                             System.out.println("Accountholder Account Number : " + customer.acc_number);
                                             System.out.println("Accountholder Address : " + customer.address);
                                             System.out.println("Accountholder Contact : " + customer.phone);
                                             System.out.println("Accountholder Balance : " + customer.balance);
+                                        */
                                             break;
                                         case 7:
                                             continue outer;
@@ -330,13 +352,15 @@ public class savings
                                 }
                             } else {
                                 System.out.println("Wrong username/password.");
+                                continue outer;
                             }
                         } else {
                             System.out.println("Wrong username/password.");
+                            continue outer;
                         }
                     }
 
-                    case 3 -> {
+                    case 3: {
                         System.out.println("Enter username : ");
                         username = sc.next();
                         if (bank.customerMap.containsKey(username)) {
@@ -347,7 +371,7 @@ public class savings
                         break;
                     }
 
-                    case 4 -> {
+                    case 4 : {
 
                         System.out.println("Enter username : ");
                         username = sc.next();
@@ -392,9 +416,10 @@ public class savings
                                         default:
                                             break ;
                                     }
-
+                                    customer.add(new Date());
 
                                 }
+
 
                             }
                         }
@@ -408,11 +433,11 @@ public class savings
 
 
 
-                    case 5 -> {
+                    case 5: {
                         br.close();
                         System.exit(1);
                     }
-                    default -> System.out.println("Wrong choice !");
+                    default: System.out.println("Wrong choice !");
                 }
 
             }
@@ -423,16 +448,16 @@ public class savings
 
         }
     }
-    Map<String,Customer> customerMap;
+    Map<String, Customer> customerMap;
     savings()
     {
-        customerMap = new HashMap <String,Customer>();
+        customerMap = new HashMap <String, Customer>();
     }
-	/*public static void main(String []args) throws IOException
-	{
+    public static void main(String []args) throws IOException
+    {
 
-       savings();
+        demosavings();
 
-    }*/
+    }
 
 }
